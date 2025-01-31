@@ -78,26 +78,37 @@ def get_user_action():
 
 
 def play_another_round():
-    another_round = input("\nAnother round? (y/n): ")
-    return another_round.lower() == 'y'
+        
+        valid_options = ['y', 'n']
+        another_round = input("\nAnother round? (y/n): ")
+        while another_round not in valid_options:
+            print(f'\n{another_round} is not a valid option. Please enter y or n.')
+            another_round = input("\nAnother round? (y/n): ")
+            if another_round == 'y':
+                return True
+            elif another_round == 'n':
+                return False
 
 
-def main():
 
-    while True:
-        try:
-            user_action = get_user_action()
-        except ValueError:
-            range_str = f"[0, {len(GameAction) - 1}]"
-            print(f"Invalid selection. Pick a choice in range {range_str}!")
-            continue
+class App():
+    
+    def main():
 
-        computer_action = get_computer_action()
-        assess_game(user_action, computer_action)
+        continue_playing = True
+        while continue_playing:
+            try:
+                user_action = get_user_action()
+            except ValueError:
+                range_str = f"[0, {len(GameAction) - 1}]"
+                print(f"Invalid selection. Pick a choice in range {range_str}!")
+                continue
 
-        if not play_another_round():
-            break
+            computer_action = get_computer_action()
+            assess_game(user_action, computer_action)
+
+            continue_playing = play_another_round()
 
 
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()
