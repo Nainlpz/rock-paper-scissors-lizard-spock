@@ -16,9 +16,9 @@ class GameResult(IntEnum):
 
 
 Victories = {
-    GameAction.Rock: GameAction.Paper,
-    GameAction.Paper: GameAction.Scissors,
-    GameAction.Scissors: GameAction.Rock
+    GameAction.Rock: [GameAction.Paper],
+    GameAction.Paper: [GameAction.Scissors],
+    GameAction.Scissors: [GameAction.Rock]
 }
 
 def assess_game(user_action, computer_action):
@@ -29,32 +29,13 @@ def assess_game(user_action, computer_action):
         print(f"User and computer picked {user_action.name}. Draw game!")
         game_result = GameResult.Tie
 
-    # You picked Rock
-    elif user_action == GameAction.Rock:
-        if computer_action == GameAction.Scissors:
-            print("Rock smashes scissors. You won!")
-            game_result = GameResult.Victory
-        else:
-            print("Paper covers rock. You lost!")
-            game_result = GameResult.Defeat
+    elif computer_action in Victories[user_action]:
+        print(f"User picked {user_action.name} and computer picked {computer_action.name}. You Win!")
+        game_result = GameResult.Defeat
 
-    # You picked Paper
-    elif user_action == GameAction.Paper:
-        if computer_action == GameAction.Rock:
-            print("Paper covers rock. You won!")
-            game_result = GameResult.Victory
-        else:
-            print("Scissors cuts paper. You lost!")
-            game_result = GameResult.Defeat
-
-    # You picked Scissors
-    elif user_action == GameAction.Scissors:
-        if computer_action == GameAction.Rock:
-            print("Rock smashes scissors. You lost!")
-            game_result = GameResult.Defeat
-        else:
-            print("Scissors cuts paper. You won!")
-            game_result = GameResult.Victory
+    else:
+        print(f"User picked {user_action.name} and computer picked {computer_action.name}. You Defeat!")
+        game_result = GameResult.Victory
 
     return game_result
 
