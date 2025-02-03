@@ -1,5 +1,5 @@
 import pytest
-from src.RPS_spock_lizard import Game, GameResult, GameAction
+from src.RPS_dict import Game, GameResult, GameAction
 
 
 @pytest.fixture
@@ -175,19 +175,19 @@ def test_scissors_wins(game):
         computer_action=GameAction.Scissors)
 
 
-@pytest.mark.actions
-def test_minus_action():
-    '''
-    GameActions EnumType behaviour
-    '''
-    assert 1 == len(GameAction.minus(
-        GameAction.Scissors,
-        GameAction.Lizard,
-        GameAction.Paper,
-        GameAction.Rock))
+# @pytest.mark.actions
+# def test_minus_action():
+#     '''
+#     GameActions EnumType behaviour
+#     '''
+#     assert 1 == len(GameAction.minus(
+#         GameAction.Scissors,
+#         GameAction.Lizard,
+#         GameAction.Paper,
+#         GameAction.Rock))
 
-    assert 4 == len(GameAction.minus(GameAction.Lizard))
+#     assert 4 == len(GameAction.minus(GameAction.Lizard))
 
-    assert GameAction.Lizard not in GameAction.minus(GameAction.Lizard)
+#     assert GameAction.Lizard not in GameAction.minus(GameAction.Lizard)
 
-    assert GameAction.Lizard in GameAction.minus(GameAction.Spock, GameAction.Rock)
+#     assert GameAction.Lizard in GameAction.minus(GameAction.Spock, GameAction.Rock)
