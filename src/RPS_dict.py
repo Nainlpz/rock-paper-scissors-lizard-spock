@@ -7,6 +7,9 @@ class GameAction(IntEnum):
     Rock = 0
     Paper = 1
     Scissors = 2
+    Lizard = 3
+    Spock = 4
+
 
 
 class GameResult(IntEnum):
@@ -16,46 +19,48 @@ class GameResult(IntEnum):
 
 
 Victories = {
-    GameAction.Rock: [GameAction.Paper],
-    GameAction.Paper: [GameAction.Scissors],
-    GameAction.Scissors: [GameAction.Rock]
+    GameAction.Rock: [GameAction.Scissors, GameAction.Lizard],
+    GameAction.Paper: [GameAction.Rock, GameAction.Spock],
+    GameAction.Scissors: [GameAction.Paper, GameAction.Lizard],
+    GameAction.Lizard: [GameAction.Spock, GameAction.Paper],
+    GameAction.Spock: [GameAction.Scissors, GameAction.Rock]
 }
+class Game:
+    def assess_game(self, user_action, computer_action):
 
-def assess_game(user_action, computer_action):
+        game_result = None
 
-    game_result = None
+        if user_action == computer_action:
+            print(f"User and computer picked {user_action.name}. Draw game!")
+            game_result = GameResult.Tie
 
-    if user_action == computer_action:
-        print(f"User and computer picked {user_action.name}. Draw game!")
-        game_result = GameResult.Tie
+        elif computer_action in Victories[user_action]:
+            print(f"User picked {user_action.name} and computer picked {computer_action.name}. You Win!")
+            game_result = GameResult.Victory
 
-    elif computer_action in Victories[user_action]:
-        print(f"User picked {user_action.name} and computer picked {computer_action.name}. You Win!")
-        game_result = GameResult.Defeat
+        else:
+            print(f"User picked {user_action.name} and computer picked {computer_action.name}. You Defeat!")
+            game_result = GameResult.Defeat
 
-    else:
-        print(f"User picked {user_action.name} and computer picked {computer_action.name}. You Defeat!")
-        game_result = GameResult.Victory
-
-    return game_result
-
-
-def get_computer_action():
-    computer_selection = random.randint(0, len(GameAction) - 1)
-    computer_action = GameAction(computer_selection)
-    print(f"Computer picked {computer_action.name}.")
-
-    return computer_action
+        return game_result
 
 
-def get_user_action():
-    # Scalable to more options (beyond rock, paper and scissors...)
-    game_choices = [f"{game_action.name}[{game_action.value}]" for game_action in GameAction]
-    game_choices_str = ", ".join(game_choices)
-    user_selection = int(input(f"\nPick a choice ({game_choices_str}): "))
-    user_action = GameAction(user_selection)
+    def get_computer_action(self):
+        computer_selection = random.randint(0, len(GameAction) - 1)
+        computer_action = GameAction(computer_selection)
+        print(f"Computer picked {computer_action.name}.")
 
-    return user_action
+        return computer_action
+
+
+    def get_user_action(self):
+        # Scalable to more options (beyond rock, paper and scissors...)
+        game_choices = [f"{game_action.name}[{game_action.value}]" for game_action in GameAction]
+        game_choices_str = ", ".join(game_choices)
+        user_selection = int(input(f"\nPick a choice ({game_choices_str}): "))
+        user_action = GameAction(user_selection)
+
+        return user_action
 
 
 def play_another_round():
@@ -72,24 +77,23 @@ def play_another_round():
 
 
 
-class App():
-    
-    def main():
 
-        continue_playing = True
-        while continue_playing:
-            try:
-                user_action = get_user_action()
-            except ValueError:
-                range_str = f"[0, {len(GameAction) - 1}]"
-                print(f"Invalid selection. Pick a choice in range {range_str}!")
-                continue
+def main():
 
-            computer_action = get_computer_action()
-            assess_game(user_action, computer_action)
+    continue_playing = True
+    while continue_playing:
+        try:
+            user_action = Game().get_user_action()
+        except ValueError:
+            range_str = f"[0, {len(GameAction) - 1}]"
+            print(f"Invalid selection. Pick a choice in range {range_str}!")
+            continue
 
-            continue_playing = play_another_round()
+        computer_action = Game().get_computer_action()
+        Game().assess_game(user_action, computer_action)
+
+        continue_playing = play_another_round()
 
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":    
+    main()
